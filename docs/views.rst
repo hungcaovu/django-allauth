@@ -17,6 +17,23 @@ Users sign up via the ``allauth.account.views.SignupView`` view over at
 ``/accounts/signup/`` (URL name ``account_signup``).
 
 
+TODO: Daskboard (''daskboard'')
+Display profile + badge + ranks + history search
+
+
+TODO: History Search (``account_history``)
+----------------------------
+Users profile update via the ``allauth.account.views.HistoryView`` view over at
+    ``/accounts/history/`` (URL name ``account_history``).
+
+
+
+TODO: Profile Update (``account_update``)
+----------------------------
+Users profile update via the ``allauth.account.views.ProfileUpdateView`` view over at
+    ``/accounts/update/`` (URL name ``account_update``).
+    Address, Citi, School, University
+
 Logout (``account_logout``)
 ----------------------------
 
