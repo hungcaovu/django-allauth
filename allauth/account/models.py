@@ -14,6 +14,27 @@ from .adapter import get_adapter
 from .managers import EmailAddressManager, EmailConfirmationManager
 from .utils import user_email
 
+class UserProfile (models.Model):
+    user = models.OneToOneField(allauth_app_settings.USER_MODEL, 
+                         verbose_name=_("User Profile"), 
+                         related_name='profile',
+                         on_delete=models.CASCADE)
+    birthdate = models.DateField(null=True, blank=True)
+    university = models.TextField(verbose_name=_("University"),
+                                  null=True, blank=True)
+    primary_school= models.TextField(verbose_name=_("Primary School"),
+                                  null=True, blank=True)
+    high_school= models.TextField(verbose_name=_("High School"),
+                                  null=True, blank=True)
+    city = models.TextField(verbose_name=_("City"),
+                                  null=True, blank=True)
+    state = models.TextField(verbose_name=_("State/Province"),
+                                  null=True, blank=True)
+    zip = models.TextField(verbose_name=_("Zip Code"),
+                                  null=True, blank=True)
+    country = models.TextField(verbose_name=_("Country"),
+                                  null=True, blank=True)
+                    
 
 class EmailAddress(models.Model):
 

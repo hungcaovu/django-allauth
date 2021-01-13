@@ -615,3 +615,68 @@ class UserTokenForm(forms.Form):
             raise forms.ValidationError(self.error_messages["token_invalid"])
 
         return cleaned_data
+
+
+class UserProfileForm(forms.Form):
+    birthdate = forms.DateField(
+        widget=forms.SelectDateWidget())
+
+    university = forms.CharField(
+        widget=forms.TextInput(
+            attrs={
+                "type": "text",
+                "placeholder": _("University"),
+            }
+        )
+    )
+    primary_school = forms.CharField(
+        widget=forms.TextInput(
+            attrs={
+                "type": "text",
+                "placeholder": _("Primary School"),
+            }
+        )
+    )
+    high_school = forms.CharField(
+        widget=forms.TextInput(
+            attrs={
+                "type": "text",
+                "placeholder": _("High School"),
+            }
+        )
+    )
+    city = forms.CharField(
+        widget=forms.TextInput(
+            attrs={
+                "type": "text",
+                "placeholder": _("City"),
+            }
+        )
+    )
+    state = forms.CharField(
+        widget=forms.TextInput(
+            attrs={
+                "type": "text",
+                "placeholder": _("State/Province"),
+            }
+        )
+    )
+    zip = forms.CharField(
+        widget=forms.TextInput(
+            attrs={
+                "type": "text",
+                "placeholder": _("Zip Code"),
+            }
+        ) 
+    )
+    country = forms.CharField(
+        widget=forms.TextInput(
+            attrs={
+                "type": "text",
+                "placeholder": _("Country"),
+            }
+        )
+    )
+
+    def save(self, request, **kwargs):
+        super(forms.Form, self).save(request, **kwargs)

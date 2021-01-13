@@ -19,7 +19,7 @@ Users sign up via the ``allauth.account.views.SignupView`` view over at
 
 TODO: Daskboard (''daskboard'')
 Display profile + badge + ranks + history search
-
+Url: / name: ""account_dashboard""
 
 TODO: History Search (``account_history``)
 ----------------------------

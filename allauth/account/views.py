@@ -26,6 +26,7 @@ from .forms import (
     SetPasswordForm,
     SignupForm,
     UserTokenForm,
+    UserProfileForm
 )
 from .models import EmailAddress, EmailConfirmation, EmailConfirmationHMAC
 from .utils import (
@@ -189,6 +190,18 @@ class LoginView(
 
 login = LoginView.as_view()
 
+class Dashboard (TemplateView):
+    template_name = "account/dashboard." + app_settings.TEMPLATE_EXTENSION
+
+dashboard = Dashboard.as_view()
+
+
+class ProfileView(AjaxCapableProcessFormViewMixin, FormView):
+    template_name = "account/profile." + app_settings.TEMPLATE_EXTENSION
+    form_class = UserProfileForm
+    success_url = reverse_lazy("account_profile")
+
+profile = ProfileView.as_view()
 
 class CloseableSignupMixin(object):
     template_name_signup_closed = (
@@ -212,7 +225,6 @@ class CloseableSignupMixin(object):
             "template": self.template_name_signup_closed,
         }
         return self.response_class(**response_kwargs)
-
 
 class SignupView(
     RedirectAuthenticatedUserMixin,
