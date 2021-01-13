@@ -616,10 +616,13 @@ class UserTokenForm(forms.Form):
 
         return cleaned_data
 
-
+from awesome_avatar import forms as avatar_forms
 class UserProfileForm(forms.Form):
+    image = avatar_forms.AvatarField()
+
     birthdate = forms.DateField(
-        widget=forms.SelectDateWidget())
+        widget=forms.SelectDateWidget()
+    )
 
     university = forms.CharField(
         widget=forms.TextInput(
@@ -677,6 +680,10 @@ class UserProfileForm(forms.Form):
             }
         )
     )
+    # Static for account
+    like = forms.IntegerField() 
+    dislike = forms.IntegerField() 
+    rank = forms.FloatField()         
 
     def save(self, request, **kwargs):
         super(forms.Form, self).save(request, **kwargs)

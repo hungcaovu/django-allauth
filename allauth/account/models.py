@@ -7,6 +7,8 @@ from django.db import models, transaction
 from django.utils import timezone
 from django.utils.crypto import get_random_string
 from django.utils.translation import gettext_lazy as _
+from awesome_avatar.fields import AvatarField
+from awesome_avatar import forms as avatar_forms
 
 from .. import app_settings as allauth_app_settings
 from . import app_settings, signals
@@ -19,7 +21,10 @@ class UserProfile (models.Model):
                          verbose_name=_("User Profile"), 
                          related_name='profile',
                          on_delete=models.CASCADE)
+    avatar = AvatarField(verbose_name="Avarta", upload_to='avatars', width=100, height=100)
+
     birthdate = models.DateField(null=True, blank=True)
+
     university = models.TextField(verbose_name=_("University"),
                                   null=True, blank=True)
     primary_school= models.TextField(verbose_name=_("Primary School"),
@@ -34,7 +39,13 @@ class UserProfile (models.Model):
                                   null=True, blank=True)
     country = models.TextField(verbose_name=_("Country"),
                                   null=True, blank=True)
-                    
+    # Rank profile
+    like = models.IntegerField(verbose_name=_("Like"), default=0) 
+    dislike = models.IntegerField(verbose_name=_("Dis Like"), default=0)
+    rank = models.FloatField(verbose_name=_("Rank"), default=0.0)
+    #badges will be later: Need to design it and spare the space on page.
+    
+
 
 class EmailAddress(models.Model):
 
