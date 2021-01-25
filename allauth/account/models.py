@@ -46,6 +46,15 @@ class UserProfile (models.Model):
     #badges will be later: Need to design it and spare the space on page.
     
 
+from django.contrib.auth import get_user_model
+from django.db.models.signals import post_save
+def create_profile(sender, instance, created, *args, **kwargs):
+    user = instance
+    UserProfile.objects.get_or_create(user=user)
+
+user = get_user_model()
+post_save.connect(create_profile, sender=user, dispatch_uid='create_profile')
+
 
 class EmailAddress(models.Model):
 
