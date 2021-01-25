@@ -1,5 +1,14 @@
 from django.contrib.auth.signals import user_logged_out  # noqa
 from django.dispatch import Signal
+from django.db.models.signals import post_save
+from django.contrib.auth import get_user_model
+
+def create_profile(sender, instance, created, *args, **kwargs):
+    user = instance
+    UserProfile.objects.get_or_create(user=user)
+
+user = get_user_model()
+post_save.connect(create_profile, sender=user, dispatch_uid='create_profile')
 
 
 # Provides the arguments "request", "user"
