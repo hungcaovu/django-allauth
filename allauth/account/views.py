@@ -203,6 +203,13 @@ class ProfileView(AjaxCapableProcessFormViewMixin, FormView):
 
 profile = ProfileView.as_view()
 
+class AvatarView(AjaxCapableProcessFormViewMixin, FormView):
+    template_name = "account/avatar." + app_settings.TEMPLATE_EXTENSION
+    form_class = AvatarForm
+    success_url = reverse_lazy("account_avatar")
+
+avatar = AvatarView.as_view()
+
 class CloseableSignupMixin(object):
     template_name_signup_closed = (
         "account/signup_closed." + app_settings.TEMPLATE_EXTENSION
