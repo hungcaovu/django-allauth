@@ -26,9 +26,10 @@ from .forms import (
     SetPasswordForm,
     SignupForm,
     UserTokenForm,
-    UserProfileForm
+    UserProfileForm,
+    AvatarForm
 )
-from .models import EmailAddress, EmailConfirmation, EmailConfirmationHMAC
+from .models import EmailAddress, EmailConfirmation, EmailConfirmationHMAC, UserProfile
 from .utils import (
     complete_signup,
     get_login_redirect_url,
@@ -202,11 +203,26 @@ class ProfileView(AjaxCapableProcessFormViewMixin, FormView):
     success_url = reverse_lazy("account_profile")
 
 profile = ProfileView.as_view()
-
-class AvatarView(AjaxCapableProcessFormViewMixin, FormView):
+from django.shortcuts import render
+class AvatarView(FormView):
     template_name = "account/avatar." + app_settings.TEMPLATE_EXTENSION
     form_class = AvatarForm
     success_url = reverse_lazy("account_avatar")
+
+    def get(self, request):
+        profile, _ = UserProfile.objects.get_or_create(user = request.user)
+        form = AvatarForm(instance = profile)
+        return render(request, self.template_name, {'form': form})
+    def post(self, request):
+        profile, _ = UserProfile.objects.get_or_create(user = request.user)
+        form = AvatarForm(request.POST, request.FILES, instance = profile)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(self.success_url)
+        else:
+            form = AvatarChangeForm(instance=request.user.profile)
+        
+        return render(request, self.template_name, {'form': form})
 
 avatar = AvatarView.as_view()
 

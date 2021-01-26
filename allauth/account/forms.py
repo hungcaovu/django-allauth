@@ -18,7 +18,7 @@ from ..utils import (
 from . import app_settings
 from .adapter import get_adapter
 from .app_settings import AuthenticationMethod
-from .models import EmailAddress
+from .models import EmailAddress, UserProfile
 from .utils import (
     filter_users_by_email,
     get_user_model,
@@ -617,9 +617,31 @@ class UserTokenForm(forms.Form):
         return cleaned_data
 
 from awesome_avatar import forms as avatar_forms
-class UserProfileForm(forms.Form):
-    image = avatar_forms.AvatarField()
 
+MAX_LENGTH = 4000000
+class AvatarForm(forms.ModelForm):
+    class Meta:
+        model = UserProfile
+        fields = ['avatar']
+    avatar = avatar_forms.AvatarField()
+
+    error_messages = {
+        "file_too_large": _("Image upload file is too large exceed 4mb."),
+    }
+    
+    def clean_avatar(self):
+        avatar = self.cleaned_data.get("avatar", None)
+        file = avatar.get("file", None)
+        if file and file.size > MAX_LENGTH:
+            raise forms.ValidationError(self.error_messages["file_too_large"])
+        return avatar
+    """  
+    def save(self, instance):
+        self.cleaned_data["avatar"]
+        pass
+    """ 
+        
+class UserProfileForm(forms.Form):
     birthdate = forms.DateField(
         widget=forms.SelectDateWidget()
     )
