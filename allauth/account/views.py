@@ -219,8 +219,6 @@ class AvatarView(FormView):
         if form.is_valid():
             form.save()
             return HttpResponseRedirect(self.success_url)
-        else:
-            form = AvatarForm(instance=request.user.profile)
         
         return render(request, self.template_name, {'form': form})
 
