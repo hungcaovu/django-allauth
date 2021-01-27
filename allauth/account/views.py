@@ -220,7 +220,7 @@ class AvatarView(FormView):
             form.save()
             return HttpResponseRedirect(self.success_url)
         else:
-            form = AvatarChangeForm(instance=request.user.profile)
+            form = AvatarForm(instance=request.user.profile)
         
         return render(request, self.template_name, {'form': form})
 
