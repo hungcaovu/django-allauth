@@ -203,6 +203,7 @@ class ProfileView(AjaxCapableProcessFormViewMixin, FormView):
     success_url = reverse_lazy("account_profile")
 
 profile = ProfileView.as_view()
+from django.contrib import messages
 from django.shortcuts import render
 class AvatarView(FormView):
     template_name = "account/avatar." + app_settings.TEMPLATE_EXTENSION
@@ -216,11 +217,17 @@ class AvatarView(FormView):
     def post(self, request):
         profile, _ = UserProfile.objects.get_or_create(user = request.user)
         form = AvatarForm(request.POST, request.FILES, instance = profile)
+        
         if form.is_valid():
             form.save()
+            messages.add_message(request, messages.SUCCESS, 'Change avatar sucessfully!')
             return HttpResponseRedirect(self.success_url)
-        
-        return render(request, self.template_name, {'form': form})
+        else:
+            for key, msg in form.errors.items():
+                for m in msg:
+                    messages.add_message(request, messages.ERROR, m)
+            form = AvatarForm(instance = profile)
+            return render(request, self.template_name, {'form': form})
 
 avatar = AvatarView.as_view()
 
