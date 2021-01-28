@@ -232,9 +232,14 @@ avatar = AvatarView.as_view()
 class AccountUpdateView(AjaxCapableProcessFormViewMixin, FormView):
     template_name = "account/update_account_info." + app_settings.TEMPLATE_EXTENSION
     form_class = UpdateAccountForm
-    success_url = reverse_lazy("account_set_password")
-    
+    success_url = "/"    
+
     def render_to_response(self, context, **response_kwargs):
+        """
+        return super(AccountUpdateView, self).render_to_response(
+                context, **response_kwargs
+            )
+        """
         if not self.request.user.has_usable_password():
             return super(AccountUpdateView, self).render_to_response(
                 context, **response_kwargs
@@ -244,7 +249,7 @@ class AccountUpdateView(AjaxCapableProcessFormViewMixin, FormView):
     def get_form_kwargs(self):
         kwargs = super(AccountUpdateView, self).get_form_kwargs()
         kwargs["user"] = self.request.user
-        kwargs["initial"] = {'username': self.request.user.username}
+        kwargs["initial"] = {'username': self.request.user.username, 'first_name': self.request.user.first_name, 'last_name': self.request.user.last_name}
         return kwargs
 
     def form_valid(self, form):

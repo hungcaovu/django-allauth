@@ -505,6 +505,24 @@ class SetPasswordForm(PasswordVerificationMixin, UserForm):
 
 from django.utils.functional import cached_property
 class UpdateAccountForm(PasswordVerificationMixin, UserForm):
+    first_name = forms.CharField(
+        widget=forms.TextInput(
+            attrs={
+                "type": "text",
+                "placeholder": _("First Name"),
+                "autocomplete": "first_name",
+            }
+        )
+    )
+    last_name = forms.CharField(
+        widget=forms.TextInput(
+            attrs={
+                "type": "text",
+                "placeholder": _("Last Name"),
+                "autocomplete": "last_name",
+            }
+        )
+    )
     username = forms.CharField(
         label=_("Username"),
         min_length=app_settings.USERNAME_MIN_LENGTH,
@@ -527,6 +545,10 @@ class UpdateAccountForm(PasswordVerificationMixin, UserForm):
             value = self.cleaned_data["username"]
         return value
     def save(self):
+        if 'first_name' in self.cleaned_data:
+            get_adapter().set_first_name(self.user, self.cleaned_data["first_name"], commit=False)
+        if 'last_name' in self.cleaned_data:
+            get_adapter().set_last_name(self.user, self.cleaned_data["last_name"], commit=False)
         if 'username' in self.cleaned_data:
             get_adapter().set_username(self.user, self.cleaned_data["username"], commit=False)
         get_adapter().set_password(self.user, self.cleaned_data["password1"])

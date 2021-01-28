@@ -415,9 +415,19 @@ class DefaultAccountAdapter(object):
         user.set_password(password)
         if commit:
             user.save()
-    
+    # Need to implement arrgie input later
     def set_username(self, user, username, commit = True):
         user.username = username
+        if commit:
+            user.save()
+    
+    def set_first_name(self, user, first_name, commit = True):
+        user.first_name = first_name
+        if commit:
+            user.save()
+
+    def set_last_name(self, user, last_name, commit = True):
+        user.last_name = last_name
         if commit:
             user.save()
 
