@@ -223,10 +223,6 @@ class AvatarView(FormView):
             messages.add_message(request, messages.SUCCESS, 'Change avatar sucessfully!')
             return HttpResponseRedirect(self.success_url)
         else:
-            for key, msg in form.errors.items():
-                for m in msg:
-                    messages.add_message(request, messages.ERROR, m)
-            form = AvatarForm(instance = profile)
             return render(request, self.template_name, {'form': form})
 
 avatar = AvatarView.as_view()
