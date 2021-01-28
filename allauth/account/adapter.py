@@ -411,9 +411,15 @@ class DefaultAccountAdapter(object):
         email_address.set_as_primary(conditional=True)
         email_address.save()
 
-    def set_password(self, user, password):
+    def set_password(self, user, password, commit = True):
         user.set_password(password)
-        user.save()
+        if commit:
+            user.save()
+    
+    def set_username(self, user, username, commit = True):
+        user.username = username
+        if commit:
+            user.save()
 
     def get_user_search_fields(self):
         user = get_user_model()()

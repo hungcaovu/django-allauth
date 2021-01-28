@@ -27,7 +27,8 @@ from .forms import (
     SignupForm,
     UserTokenForm,
     UserProfileForm,
-    AvatarForm
+    AvatarForm,
+    UpdateAccountForm
 )
 from .models import EmailAddress, EmailConfirmation, EmailConfirmationHMAC, UserProfile
 from .utils import (
@@ -226,6 +227,50 @@ class AvatarView(FormView):
             return render(request, self.template_name, {'form': form})
 
 avatar = AvatarView.as_view()
+
+
+class AccountUpdateView(AjaxCapableProcessFormViewMixin, FormView):
+    template_name = "account/update_account_info." + app_settings.TEMPLATE_EXTENSION
+    form_class = UpdateAccountForm
+    success_url = reverse_lazy("account_set_password")
+    
+    def render_to_response(self, context, **response_kwargs):
+        if not self.request.user.has_usable_password():
+            return super(AccountUpdateView, self).render_to_response(
+                context, **response_kwargs
+            )
+        return HttpResponseRedirect("/")
+
+    def get_form_kwargs(self):
+        kwargs = super(AccountUpdateView, self).get_form_kwargs()
+        kwargs["user"] = self.request.user
+        kwargs["initial"] = {'username': self.request.user.username}
+        return kwargs
+
+    def form_valid(self, form):
+        form.save()
+        logout_on_password_change(self.request, form.user)
+        get_adapter(self.request).add_message(
+            self.request, messages.SUCCESS, "account/messages/password_set.txt"
+        )
+        signals.password_set.send(
+            sender=self.request.user.__class__,
+            request=self.request,
+            user=self.request.user,
+        )
+        return super(AccountUpdateView, self).form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        ret = super(AccountUpdateView, self).get_context_data(**kwargs)
+        # NOTE: For backwards compatibility
+        #ret["password_set_form"] = ret.get("form")
+        # (end NOTE)
+        return ret
+
+
+account_update = login_required(AccountUpdateView.as_view())
+
+
 
 class CloseableSignupMixin(object):
     template_name_signup_closed = (
