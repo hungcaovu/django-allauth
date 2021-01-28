@@ -31,6 +31,7 @@ class UserProfile (models.Model):
                                   null=True, blank=True)
     high_school= models.TextField(verbose_name=_("High School"),
                                   null=True, blank=True)
+                                  
     city = models.TextField(verbose_name=_("City"),
                                   null=True, blank=True)
     state = models.TextField(verbose_name=_("State/Province"),

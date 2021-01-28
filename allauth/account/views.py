@@ -9,6 +9,7 @@ from django.http import (
 from django.shortcuts import redirect
 from django.urls import reverse, reverse_lazy
 from django.utils.decorators import method_decorator
+from django.utils.translation import gettext, gettext_lazy as _, pgettext
 from django.views.decorators.debug import sensitive_post_parameters
 from django.views.generic.base import TemplateResponseMixin, TemplateView, View
 from django.views.generic.edit import FormView
@@ -31,6 +32,7 @@ from .forms import (
     UpdateAccountForm
 )
 from .models import EmailAddress, EmailConfirmation, EmailConfirmationHMAC, UserProfile
+
 from .utils import (
     complete_signup,
     get_login_redirect_url,
@@ -202,6 +204,23 @@ class ProfileView(AjaxCapableProcessFormViewMixin, FormView):
     template_name = "account/profile." + app_settings.TEMPLATE_EXTENSION
     form_class = UserProfileForm
     success_url = reverse_lazy("account_profile")
+    
+    def get_form_kwargs(self):
+        kwargs = super(ProfileView, self).get_form_kwargs()
+        
+        profile, _ = UserProfile.objects.get_or_create(user =self.request.user)
+        kwargs["instance"] = profile
+        return kwargs
+    
+    def form_valid(self, form):
+        form.save()
+        messages.add_message(self.request, messages.SUCCESS, _('Update profile sucessfully!'))
+        return super(ProfileView, self).form_valid(form)
+    
+
+    def get_context_data(self, **kwargs):
+        ret = super(ProfileView, self).get_context_data(**kwargs)
+        return ret
 
 profile = ProfileView.as_view()
 from django.contrib import messages
@@ -221,7 +240,7 @@ class AvatarView(FormView):
         
         if form.is_valid():
             form.save()
-            messages.add_message(request, messages.SUCCESS, 'Change avatar sucessfully!')
+            messages.add_message(request, messages.SUCCESS, _('Change avatar sucessfully!'))
             return HttpResponseRedirect(self.success_url)
         else:
             return render(request, self.template_name, {'form': form})

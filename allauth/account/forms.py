@@ -544,6 +544,7 @@ class UpdateAccountForm(PasswordVerificationMixin, UserForm):
         else:
             value = self.cleaned_data["username"]
         return value
+    
     def save(self):
         if 'first_name' in self.cleaned_data:
             get_adapter().set_first_name(self.user, self.cleaned_data["first_name"], commit=False)
@@ -690,12 +691,22 @@ class AvatarForm(forms.ModelForm):
         pass
     """ 
         
-class UserProfileForm(forms.Form):
+
+YEARS= [x for x in range(1940,2021)]
+class UserProfileForm(forms.ModelForm):
+    
+    class Meta:
+        model = UserProfile
+        fields = ['birthdate', 'university', 'primary_school', 'high_school', 'city', 'state', 'zip', 'country']
+    
+    
     birthdate = forms.DateField(
-        widget=forms.SelectDateWidget()
+        label = _("Birth Date"),
+        widget=forms.SelectDateWidget(years=YEARS)
     )
 
     university = forms.CharField(
+        label = _("University"),
         widget=forms.TextInput(
             attrs={
                 "type": "text",
@@ -704,6 +715,7 @@ class UserProfileForm(forms.Form):
         )
     )
     primary_school = forms.CharField(
+        label = _("Primary School"),
         widget=forms.TextInput(
             attrs={
                 "type": "text",
@@ -712,6 +724,7 @@ class UserProfileForm(forms.Form):
         )
     )
     high_school = forms.CharField(
+        label = _("High School"),
         widget=forms.TextInput(
             attrs={
                 "type": "text",
@@ -720,6 +733,7 @@ class UserProfileForm(forms.Form):
         )
     )
     city = forms.CharField(
+        label = _("City"),
         widget=forms.TextInput(
             attrs={
                 "type": "text",
@@ -728,6 +742,7 @@ class UserProfileForm(forms.Form):
         )
     )
     state = forms.CharField(
+        label = _("State/Province"),
         widget=forms.TextInput(
             attrs={
                 "type": "text",
@@ -736,6 +751,7 @@ class UserProfileForm(forms.Form):
         )
     )
     zip = forms.CharField(
+        label = _("Zip Code"),
         widget=forms.TextInput(
             attrs={
                 "type": "text",
@@ -744,6 +760,7 @@ class UserProfileForm(forms.Form):
         ) 
     )
     country = forms.CharField(
+        label = _("Country"),
         widget=forms.TextInput(
             attrs={
                 "type": "text",
@@ -752,9 +769,9 @@ class UserProfileForm(forms.Form):
         )
     )
     # Static for account
-    like = forms.IntegerField() 
-    dislike = forms.IntegerField() 
-    rank = forms.FloatField()         
+    #like = forms.IntegerField() 
+    #dislike = forms.IntegerField() 
+    #rank = forms.FloatField()    
 
-    def save(self, request, **kwargs):
-        super(forms.Form, self).save(request, **kwargs)
+    def __init__(self, *args, **kwargs):
+        super(UserProfileForm, self).__init__(*args, **kwargs)
