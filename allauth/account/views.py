@@ -208,7 +208,7 @@ class ProfileView(AjaxCapableProcessFormViewMixin, FormView):
     def get_form_kwargs(self):
         kwargs = super(ProfileView, self).get_form_kwargs()
         
-        profile, _ = UserProfile.objects.get_or_create(user =self.request.user)
+        profile, __ = UserProfile.objects.get_or_create(user =self.request.user)
         kwargs["instance"] = profile
         return kwargs
     
@@ -231,11 +231,11 @@ class AvatarView(FormView):
     success_url = reverse_lazy("account_avatar")
 
     def get(self, request):
-        profile, _ = UserProfile.objects.get_or_create(user = request.user)
+        profile, __ = UserProfile.objects.get_or_create(user = request.user)
         form = AvatarForm(instance = profile)
         return render(request, self.template_name, {'form': form})
     def post(self, request):
-        profile, _ = UserProfile.objects.get_or_create(user = request.user)
+        profile, __ = UserProfile.objects.get_or_create(user = request.user)
         form = AvatarForm(request.POST, request.FILES, instance = profile)
         
         if form.is_valid():

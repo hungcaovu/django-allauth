@@ -37,7 +37,7 @@ class Profile(template.Node):
         t = context.template.engine.get_template(self.template_name)
         user = context.request.user
         if user.id:
-            profile, _ = UserProfile.objects.get_or_create(user=user)
+            profile, __ = UserProfile.objects.get_or_create(user=user)
             context.update({'user': user, 'profile': profile})
             res = t.render(context)
             return res 
@@ -54,7 +54,7 @@ class ProfileSmall(template.Node):
         t = context.template.engine.get_template(self.template_name)
         user = context.request.user
         if user.id:
-            profile, _ = UserProfile.objects.get_or_create(user=user)
+            profile, __ = UserProfile.objects.get_or_create(user=user)
             context.update({'user': user, 'profile': profile})
             res = t.render(context)
             return res 
