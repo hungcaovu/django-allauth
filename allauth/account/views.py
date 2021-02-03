@@ -197,7 +197,7 @@ login = LoginView.as_view()
 class Dashboard (TemplateView):
     template_name = "account/dashboard." + app_settings.TEMPLATE_EXTENSION
 
-dashboard = Dashboard.as_view()
+dashboard = login_required(Dashboard.as_view())
 
 
 class ProfileView(AjaxCapableProcessFormViewMixin, FormView):
@@ -222,7 +222,8 @@ class ProfileView(AjaxCapableProcessFormViewMixin, FormView):
         ret = super(ProfileView, self).get_context_data(**kwargs)
         return ret
 
-profile = ProfileView.as_view()
+profile = login_required(ProfileView.as_view())
+
 from django.contrib import messages
 from django.shortcuts import render
 class AvatarView(FormView):
@@ -245,7 +246,7 @@ class AvatarView(FormView):
         else:
             return render(request, self.template_name, {'form': form})
 
-avatar = AvatarView.as_view()
+avatar = login_required(AvatarView.as_view())
 
 
 class AccountUpdateView(AjaxCapableProcessFormViewMixin, FormView):
